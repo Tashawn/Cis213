@@ -1,0 +1,88 @@
+import java.util.Scanner;
+import java.util.Random;
+import java.util.InputMismatchException;
+
+public class MnMDispenser {
+
+    private static Scanner s = new Scanner(System.in); // for input from the console
+
+    private final static String[] TYPES = //filling types 
+    {
+        "Peanut",
+        "Crispy",
+        "Almond",
+        "Pretzel",
+        "Dark Mint",
+        "Milk Chocolate",
+        "Peanut Butter",
+        "Dark Chocolate",
+        "Dark Chocolate Peanut",
+        "Mega"
+
+    };
+
+    private static Random rand = // RNG 
+        new Random();
+
+    private final static int THRESHOLD = 92;
+
+    
+
+    private final static String[] COLORS = //colors to be selected by the RNG 
+    { "Green", "Blue",
+      "Red", "Yellow",
+      "Brown", "Orange"};
+    public static void main(String[] args) {
+        int numMnMs = 0;
+        while(numMnMs < 10 || numMnMs > 1000000) {// the ammount of m&m that can be made between 10 and 1000000
+            System.out.print("Please enter the number of M&M's you would like (10 to 1,000,000): ");
+            try {
+                numMnMs = s.nextInt(); // to save the option you selected 
+            } catch (InputMismatchException e) {
+                System.out.println("Please enter an integer between 10 and 1,000,000.");
+                s.nextLine();
+            }
+        }
+        int type = 0;
+        while (type < 1 || type > 10) {// to save the option you selected 
+            System.out.println("Please select the type of filling for the M&M's: ");
+            for (int i = 0; i < TYPES.length/2; ++i) {
+                System.out.println((i+1) + ". " + TYPES[i] + "\t\t" + (i+6) + ". " + TYPES[i+5]);
+            }
+            try {
+                System.out.print("\nYour choice: ");
+                type = s.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("Please enter an integer between 1 and 10.");
+                s.nextLine();
+            }
+        }
+        int[] totalCounts = new int[COLORS.length];
+        int[] crackCounts = new int[COLORS.length];
+        for(int i = 0; i < numMnMs; ++i) {
+            int color = rand.nextInt(COLORS.length);
+            ++totalCounts[color];
+            if (rand.nextInt(100) > THRESHOLD) {
+                ++crackCounts[color]; 
+            }
+        }
+        System.out.println("\nHere is a list of your " + numMnMs + " " + TYPES[type-1] + " M&M's:");
+        for (int i = 0; i < totalCounts.length; ++i) {
+            System.out.println(totalCounts[i] + " " + COLORS[i]);
+        }
+        for (int i = 0; i < crackCounts.length; ++i) {
+            if(crackCounts[i] == 1) {
+                System.out.println(crackCounts[i] + " " + COLORS[i] + " M&M is damaged.");
+            } else if (crackCounts[i] > 1) {
+                System.out.println(crackCounts[i] + " " + COLORS[i] + " M&M's are damaged.");
+            }
+        }
+        
+        System.out.println("\nHave A nice day!");
+        
+    }
+}
+// My test plan was to just run it to see what the results were. It then made me choose the filling then used RNG to determ the color and cracked status 
+// The only thing i can reall thing of to make it better was to add comments so that someone can understand what each part does like the one thast save your option i found that really help for the upcoming project 
+// Saving your input and saving them throught the program is something I think im going to have trouble with later on 
+
